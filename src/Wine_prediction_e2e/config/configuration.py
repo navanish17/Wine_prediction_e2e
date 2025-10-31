@@ -7,8 +7,8 @@ class ConfigurationManager:
     def __init__(
         self,
         config_filepath = Config_yaml_path,
-        params_filepath = schema_yaml_path,
-        schema_filepath = params_yaml_path):
+        params_filepath = params_yaml_path,
+        schema_filepath = schema_yaml_path):
 
         self.config = read_yaml(config_filepath)
         self.params = read_yaml(params_filepath)
@@ -30,3 +30,28 @@ class ConfigurationManager:
             )
 
             return data_ingestion_config
+    
+    def get_data_validation_config(self) -> DataValidationConfig:
+        config = self.config.data_validation
+        # Support schema keys both as 'COLUMNS' and 'columns' to avoid BoxKeyError
+        # when YAML key casing differs or when using different config sources.
+        schema = None
+        try:
+            schema = self.schema.COLUMNS
+        except Exception:
+            # fallback to lowercase key access safely
+            schema = self.schema.get('columns') if hasattr(self.schema, 'get') else None
+
+        if schema is None:
+            raise KeyError("Schema key 'COLUMNS' not found in schema file. Please add 'COLUMNS:' to your schema.yaml")
+
+        create_directories([config.root_dir])
+
+        data_validation_config = DataValidationConfig(
+            root_dir=config.root_dir,
+            STATUS_FILE=config.STATUS_FILE,
+            unzip_data_dir = config.unzip_data_dir,
+            all_schema=schema,
+        )
+
+        return data_validation_config
