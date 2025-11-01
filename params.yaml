@@ -1,1 +1,7 @@
-key: val
+ElasticNet:
+  alpha : 0.2
+  l1_ratio : 0.1 
+
+
+#in future if we have to add parameters for any model like random foresrt
+# then we can add from here we.
