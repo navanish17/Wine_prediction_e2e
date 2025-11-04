@@ -20,6 +20,9 @@ conda activate mlproj
 pip install -r requirements.txt
 python app.py
 Now open up your local host 0.0.0.0:8080
+
+
+
 AWS-CICD-Deployment-with-Github-Actions
 1. Login to AWS console.
 2. Create IAM user for deployment
