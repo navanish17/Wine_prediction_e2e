@@ -84,3 +84,5 @@ ECR_REPOSITORY_NAME = simple-app
 git config --global user.name "entbappy"
 
 run this 
+
+just to check
