@@ -1,30 +1,22 @@
-FROM python:3.12-slim-bookworm
+FROM python:3.12-slim
 
-# env
-ENV PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-# System packages
-RUN apt-get update -y && apt-get install -y awscli && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+# Install OS packages
+RUN apt update -y && apt install -y awscli
 
-# Copy only dependency files first
-COPY requirements.txt setup.py README.md /app/
+# Copy everything
+COPY . .
 
-# Install python deps
+# Install Python deps
 RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy code
-COPY src /app/src
-COPY app.py /app/
-
-# Install local package
 RUN pip install .
 
 # Expose port
 EXPOSE 8080
 
-# Start app
+# Run app
 CMD ["python3", "app.py"]
